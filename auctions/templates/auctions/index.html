@@ -1,0 +1,29 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    
+    <div class = "container">
+        <h2 style = "font-family: arial, sans-serif">Active Listings</h2>
+    {% for post in posts %}
+
+        
+            <div class ="card" style = "width:100%"></div>
+                <h3 class = "card-title">{{ post.title }}</h3>
+                <img class="card-img-top" src= "{{ post.link }}" alt="Card image cap"  style = "width: 15%">
+                <div class="card-body">
+                    <p class = "card-text-justify"> {{post.description}} </p>
+                </div>
+                <h5 class="card-title-justify">Category: {{post.category}}</h5>
+                <h5 class = "card-title-justify">Price: ${{post.price}}</h5>
+                <a href="{% url 'title' post.id %}" class="btn btn-primary">View Listing</a>
+
+                <div class="card-footer text-muted">
+                    created by {{post.seller}} at {{post.time}}
+                  </div>
+                  
+                    
+
+    {% endfor %}
+    </div>
+
+{% endblock %}

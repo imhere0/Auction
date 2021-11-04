@@ -1,0 +1,25 @@
+{% extends "auctions/layout.html" %}
+{% block body %}
+<div class = "container">
+{% for watchlist in watchlists %}
+
+<div class ="card" style = "width:100%"></div>
+<h3 class = "card-title">{{ watchlist.title }}</h3>
+    <br>
+    <img class="card-img-top" src= "{{ watchlist.image }}" alt="Card image cap"  style = "width: 15%">
+
+    <ul>
+        <li>
+            <p class = "card-text">Current Price: ${{watchlist.price}} </p>
+        </li>
+        <li>
+           <p class = "card-text">Create by {{watchlist.seller}} on {{watchlist.time}}</p>
+            
+        </li>
+    </ul>
+    <a href="{% url 'title' watchlist.listingid %}" class="btn btn-primary">View Listing</a>
+    <br>
+{% endfor %} 
+</div>
+{% endblock %}   
+        

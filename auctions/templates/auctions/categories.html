@@ -1,0 +1,12 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<div class = "container">
+    <h2 style = "font-family: arial, sans-serif">Available Categories are following:</h2>
+    {% for category in categories %}
+        <a href = "{% url 'categoricalactivelisting' category%}">{{category}}</a>
+        <br>
+    {% endfor %}  
+    
+{% endblock %}    
+</div>

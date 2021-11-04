@@ -1,0 +1,129 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<div class = "container">
+    {% if message %}
+        <div>
+            <h3>{{message}}</h3>
+        </div>
+    {% endif %}
+
+    <h2>{{post.title}}</h2>
+
+    <br>
+
+    <img class = "card-img-top" src = "{{ post.link }}"  style = "width:15%">
+
+    <br>
+        <div class="card-body">
+            <p class = "card-text-justify"> {{post.description}} </p>
+        </div>
+        <div style = "font-family: arial, sans-serif">
+            Category:
+        </div>
+        <p class = "card-text">{{post.category}}</p>
+
+        <div style = "font-family: arial, sans-serif">
+            Current Price:
+        </div>
+        <p class = "card-text"> ${{post.price}}</p>
+
+        <p class = "card-text">Created by {{post.seller}} on {{post.time}}</p>
+    
+
+    
+    
+
+    {% if user.is_authenticated %}
+
+        {% if bid_message %}
+
+            {% if  add_message %}
+                <form action = "{% url 'title' post.id %}" method = "POST">
+                    {% csrf_token %}
+
+                    <button type = "submit" name = "remove" value = "remove" class = "btn btn-primary">Remove from your Watchlist</button>
+                </form>    
+            {% else %}
+                <form action = "{% url 'title' post.id %}" method = "POST">
+                    {% csrf_token %}
+                    <button type = "submit" name = "add"  value = "add" class = "btn btn-primary">Add to your Watchlist</button>
+                </form>
+            {% endif %}
+    
+    
+            <h3>Bid</h3>
+            {%if bids %}
+                <h5 style = "font-family: arial, sans-serif">Highest Bid(current price) is bidded by {{bids.user}}</h5>
+            {% endif%}
+            
+
+            <form action = "{% url 'title' post.id%}" method = "POST">
+                {% csrf_token %}
+                <label>Enter your Bid:</label>
+                <div class = "form-group">
+                <input type = "number" name = "bid" class = "form-control" placeholder = "Bid must be greater than current price">
+                </div>
+                <input type = "submit"  class="btn btn-primary" value = "Place Bid">
+            </form>
+
+            <br>
+
+            {% if post.seller|stringformat:"s" == user.get_username|stringformat:"s" %}
+
+                <form action = "{% url 'title' post.id %}" method = "POST">
+                    {% csrf_token %}
+                    <button type = "submit" name = "bidclose" value = "bidclose" class = "btn btn-primary">Close Bid</button>
+                </form>
+            {% endif %}    
+        
+        {% else %}
+     
+            {% if user.get_username|stringformat:"s" == winner.winner|stringformat:"s" %}
+                <h3 style = "font-family: arial, sans-serif">Congrats! You have won the auction </h3>
+                <br>
+                <h3 style = "font-family: arial, sans-serif">Do you want to remove the item from Auction?</h3>
+                <br>
+                <form action = "{% url 'remove' post.id%}" method="POST">
+                    {% csrf_token %}
+                    <button type = "submit" name = "listingremove"  value = "listingremove" class = "btn btn-primary">Remove From Auction</button>    
+                </form>
+            {% else %}
+
+                <h3 style = "font-family: arial, sans-serif">The auction of this item has been closed and it will be  removed  soon</h3>
+                <h4 style = "font-family: arial, sans-serif">{{winner.owner}} has sold it to {{winner.winner}} at ${{winner.price}} </h4>
+
+            {% endif %}
+
+        {% endif %}    
+        <br>        
+       <form action = "{% url 'title' post.id %}" method = "POST">
+        {% csrf_token %}
+           <label>Add a Comment</label>
+           <div class = "form-group">
+               <textarea class = "form-control" name = "comment" placeholder="Comment about the Listing" rows="5"></textarea>
+               
+           </div>
+           <input class="btn btn-primary" type="submit" value="Add Comment">
+       </form> 
+
+    {% else %}
+        <h4>Sign in to place bid</h4>
+    {% endif %}
+
+    {% if comments %}
+    <br>
+       {% for comment in comments %}
+        <div style = "font-family: arial, sans-serif;font-size:large">
+            {{comment.comment}}
+        </div>
+            
+        <p class = "card-text">Added by {{comment.user}} on {{comment.time}}</p>
+        <br>
+
+        {% endfor %}
+    {% endif%}
+</div>    
+
+{% endblock %}    
+    
